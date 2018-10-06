@@ -1,0 +1,9 @@
+SELECT p.UnitPrice, s.City, s.Country, AVG(UnitPrice) AS Average_Prices, c.CategoryName
+FROM Suppliers s
+JOIN Products p
+ON s.SupplierID = p.SupplierID
+JOIN Categories c
+ON c.CategoryID = p.CategoryID
+WHERE Country = 'USA'
+GROUP BY c.CategoryName, s.City
+ORDER BY UnitPrice DESC

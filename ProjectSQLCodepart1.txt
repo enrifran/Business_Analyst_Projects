@@ -1,0 +1,12 @@
+SELECT s.Country,
+		COUNT(s.Country) AS Count_Country,
+		SUM(p.UnitPrice) AS Total_Price_per_Country,
+		SUM(p.UnitsInStock) AS Units_In_Stock
+FROM Products p
+JOIN Suppliers s
+ON p.SupplierID = s.SupplierID
+GROUP BY 1
+ORDER BY 2 DESC,3 DESC
+LIMIT 5;
+
+

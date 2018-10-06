@@ -1,0 +1,32 @@
+1st Table
+SELECT COUNT(*) AS Delayed_Shipment
+FROM Orders
+WHERE ShippedDate > RequiredDate
+
+-----------------------------------------------------------------
+2nd Table
+With delayed AS (SELECT s.CompanyName, s.Country, s.City, p.ProductID, od.Quantity, o.OrderID, o.ShippedDate, o.RequiredDate,
+				CASE WHEN STRFTIME('%m',o.ShippedDate) > STRFTIME('%m', o.RequiredDate) AND STRFTIME('%m', o.ShippedDate) = 2
+						  THEN 28 + STRFTIME('%d', o.ShippedDate) - STRFTIME('%d', o.RequiredDate)
+					 WHEN STRFTIME('%m',o.ShippedDate) > STRFTIME('%m', o.RequiredDate) AND STRFTIME('%m', o.ShippedDate) != 2
+						  THEN 30 + STRFTIME('%d', o.ShippedDate) - STRFTIME('%d', o.RequiredDate)
+					 ELSE ABS(STRFTIME('%d', o.ShippedDate) - STRFTIME('%d', o.RequiredDate)) END AS days_delayed
+				FROM Suppliers s
+				JOIN Products p
+				ON s.SupplierID = p.SupplierID
+				JOIN OrderDetails od
+				ON p.ProductID = od.ProductID
+				JOIN Orders o
+				ON o.OrderID = od.OrderID
+				WHERE o.ShippedDate > RequiredDate
+				)
+SELECT CompanyName, Country, City, ProductID, Quantity, OrderID, ShippedDate, RequiredDate, days_delayed
+FROM delayed
+ORDER BY days_delayed DESC
+LIMIT 5 
+
+COMMENTS
+/// Details on Programming: ABS() function was used to prevent negative values
+///The case statement is Long, but not long enough since there are certain validations to be made
+for each month, there are months with different days, and will become a complex code to read. I hope this
+grasps the idea.

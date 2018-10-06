@@ -1,0 +1,28 @@
+WITH info_quantity AS 
+	(SELECT s.Country, SUM(od.Quantity) AS Sum_quantities, s.CompanyName
+	FROM Suppliers s
+	JOIN Products p
+	ON p.SupplierID = s.SupplierID
+	JOIN OrderDetails od
+	ON od.ProductID = p.ProductID
+	GROUP BY s.CompanyName, s.Country
+	)
+	
+SELECT MIN(Sum_quantities) AS Minimum_USA, Country, CompanyName
+FROM info_quantity
+WHERE Country = 'USA'
+
+
+WITH info_quantity AS 
+	(SELECT s.Country, SUM(od.Quantity) AS Sum_quantities, s.CompanyName
+	FROM Suppliers s
+	JOIN Products p
+	ON p.SupplierID = s.SupplierID
+	JOIN OrderDetails od
+	ON od.ProductID = p.ProductID
+	GROUP BY s.CompanyName, s.Country
+	)
+	
+SELECT MAX(Sum_quantities) AS Maximum_USA, Country, CompanyName
+FROM info_quantity
+WHERE Country = 'USA'
